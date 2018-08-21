@@ -5,14 +5,16 @@ import scala.math.Pi
 
 object main{
     def main(args: Array[String]) = {
-        // XOR Variables
-        var train = Array.ofDim[Double](1000,2)
-        var target = Array.ofDim[Double](1000,2)
-        var test_data = Array.ofDim[Double](2000,2)
-        var test_target = Array.ofDim[Double](2000,2)
+        val training_samples = 20000
+        val test_samples = 10000
+
+        var train = Array.ofDim[Double](training_samples,2)
+        var target = Array.ofDim[Double](training_samples,2)
+        var test_data = Array.ofDim[Double](test_samples,2)
+        var test_target = Array.ofDim[Double](test_samples,2)
 
         // Getting position
-        for(i: Int <- 0 until 1000){
+        for(i: Int <- 0 until training_samples){
             val r = new scala.util.Random
             var c = r.nextInt(2)
             if(c == 0){
@@ -30,7 +32,7 @@ object main{
             }
         }
         // Getting Test samples
-        for(i: Int <- 0 until 2000){
+        for(i: Int <- 0 until test_samples){
             val r = new scala.util.Random
             var c = r.nextInt(2)
             if(c == 0){
@@ -51,22 +53,22 @@ object main{
         var nn = new SLP(2,2)
         nn.init()
 
-        for(i: Int <- 0 until 1000){
+        for(i: Int <- 0 until training_samples){
             nn.insertInput(train(i))
             nn.feedForward()
             nn.train(target(i))
         }
+        println(s"[Train] Train completed on ${training_samples} samples.")
 
         var ans: Int = 0;
-        for(i: Int <- 0 until 2000){
+        for(i: Int <- 0 until test_samples){
             nn.insertInput(test_data(i))
             nn.feedForward()
             if(nn.out(0) == test_target(i)(0) && nn.out(1) == test_target(i)(1)){
                 ans += 1
             }
         }
-        println()
-        println(s"[Right answers]: ${ans}/2000")
+        println(s"[Right answers]: ${ans}/${test_samples}.")
 
     }
 
@@ -84,7 +86,7 @@ class SLP(inputNodes: Int, outputNodes: Int){
     var InOut = Array.ofDim[Double](ins,outs)
     //var OutBias = new Array[Double](outs)
 
-    var Learning_Rate = 0.08
+    var Learning_Rate = 0.05
 
 
     def init() : Unit = {
@@ -92,7 +94,7 @@ class SLP(inputNodes: Int, outputNodes: Int){
 
         InOut = InOut.map(_.map(_ => r.nextDouble()))
         //OutBias = OutBias.map(_ => r.nextDouble())
-        println("[SLP] Values initialized")
+        println("[SLP] Initialized")
     }
 
     def insertInput(inputs: Array[Double]): Unit = {
