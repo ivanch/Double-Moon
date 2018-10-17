@@ -5,8 +5,8 @@ import scala.math.Pi
 
 object main{
     def main(args: Array[String]) = {
-        val training_samples = 20000
-        val test_samples = 10000
+        val training_samples = 1000
+        val test_samples = 2000
 
         var train = Array.ofDim[Double](training_samples,2)
         var target = Array.ofDim[Double](training_samples,2)
@@ -60,7 +60,7 @@ object main{
         }
         println(s"[Train] Train completed on ${training_samples} samples.")
 
-        var ans: Int = 0;
+        var ans: Int = 0
         for(i: Int <- 0 until test_samples){
             nn.insertInput(test_data(i))
             nn.feedForward()
@@ -84,7 +84,6 @@ class SLP(inputNodes: Int, outputNodes: Int){
     var out: Array[Double] = new Array[Double](outs)
 
     var InOut = Array.ofDim[Double](ins,outs)
-    //var OutBias = new Array[Double](outs)
 
     var Learning_Rate = 0.05
 
@@ -93,7 +92,6 @@ class SLP(inputNodes: Int, outputNodes: Int){
         val r = new scala.util.Random
 
         InOut = InOut.map(_.map(_ => r.nextDouble()))
-        //OutBias = OutBias.map(_ => r.nextDouble())
         println("[SLP] Initialized")
     }
 
@@ -104,10 +102,10 @@ class SLP(inputNodes: Int, outputNodes: Int){
 
     def feedForward(): Unit ={
         out = out.map(_ => 0.0)
-        for(i: Int <- 0 until ins; j: Int <- 0 until outs)
-            out(j) += input(i) * InOut(i)(j)// + OutBias(j)
-
-        out = stepFunction(out)
+        for(i: Int <- 0 until ins; j: Int <- 0 until outs){
+            out(j) += input(i) * InOut(i)(j)
+            out(j) = stepFunction(out(j))
+        }
     }
 
     def train(target: Array[Double]): Unit ={
@@ -117,8 +115,8 @@ class SLP(inputNodes: Int, outputNodes: Int){
         }
     }
 
-    def stepFunction(arr: Array[Double]) = {
-        arr.map{x => if(x > 0.5) 1.0 else 0.0}
+    def stepFunction(x: Double): Double = {
+        return if(x > 0.5) 1.0 else 0.0
     }
 
 }

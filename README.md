@@ -25,11 +25,11 @@ Final result:
 ## Results
 Using parameters `w = 6; r = 4; d = 0` (which was also used on the book) and `lr = 0.05`:
 * 1,000 training samples:
-	*	about 1900 right answers out of 2,000	(~95%)
-	*	about 9600 right answers out of 10,000	(~96%)
+	* about 1950 right answers out of 2,000 (~97%)
+	* about 9850 right answers out of 10,000 (~98%)
 * 5,000 training samples:
-	* about 1950 right answers out of 2,000	(~97%)
-	* about 9800 right answers out of 10,000	(~98%)
+	* about 1980 right answers out of 2,000	(~99%)
+	* about 9850 right answers out of 10,000 (~98%)
 * 20,000 training samples:
-	* about 1980 right answers out of 2000	(~99%)
-	* about 9900 right answers out of 10,000 	(~99%)
+	* about 1990 right answers out of 2000 (~99%)
+	* about 9950 right answers out of 10,000 (~99%)
