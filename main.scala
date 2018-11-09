@@ -13,40 +13,52 @@ object main{
         var test_data = Array.ofDim[Double](test_samples,2)
         var test_target = Array.ofDim[Double](test_samples,2)
 
+        var d: Double = 0
+        var r: Double = 4
+        var w: Double = 6
+
         // Getting position
         for(i: Int <- 0 until training_samples){
-            val r = new scala.util.Random
-            var c = r.nextInt(2)
+            val rand = new scala.util.Random
+            var c = rand.nextInt(2)
             if(c == 0){
-                var a: Double = r.nextDouble()*Pi // 0 ~ 180
-                var x: Double = sqrt(r.nextDouble()) * cos(a) * 3 + (if(r.nextInt(2) == 0) (-7) else (7)*cos(a))
-                var y: Double = sqrt(r.nextDouble()) * sin(a) * 6 + (4 * sin(a))
-                train(i)(0) = x;train(i)(1) = y
-                target(i)(0) = 1.0;target(i)(1) = 0.0
+                var a: Double = rand.nextDouble()*Pi // 0 ~ 180
+                var x: Double = sqrt(rand.nextDouble()) * cos(a) * (w/2) + ((if(rand.nextInt(2) == 0) (-r-(w/2)) else (r+(w/2))) * cos(a))
+                var y: Double = sqrt(rand.nextDouble()) * sin(a) * w + (r * sin(a)) - d
+                train(i)(0) = x
+                train(i)(1) = y
+                target(i)(0) = 1.0
+                target(i)(1) = 0.0
             }else{
-                var a: Double = r.nextDouble()*scala.math.Pi + scala.math.Pi // 180 ~ 360
-                var x: Double = 7 + (sqrt(r.nextDouble()) * cos(a)*3 + (if(r.nextInt(2) == 0) (-7) else (7))*cos(a))
-                var y: Double = -(sqrt(r.nextDouble()) * sin(a) * (-6) + (-4 * sin(a)))
-                train(i)(0) = x;train(i)(1) = y
-                target(i)(0) = 0.0;target(i)(1) = 1.0
+                var a: Double = rand.nextDouble()*scala.math.Pi + scala.math.Pi // 180 ~ 360
+                var x: Double = (r+w/2) + (sqrt(rand.nextDouble()) * cos(a) * (w/2)) + (if(rand.nextInt(2) == 0) (-r-(w/2)) else (r+(w/2))) * cos(a)
+                var y: Double =         - (sqrt(rand.nextDouble()) * sin(a) * (-w)  + (-r * sin(a))) + d
+                train(i)(0) = x
+                train(i)(1) = y
+                target(i)(0) = 0.0
+                target(i)(1) = 1.0
             }
         }
         // Getting Test samples
         for(i: Int <- 0 until test_samples){
-            val r = new scala.util.Random
-            var c = r.nextInt(2)
+            val rand = new scala.util.Random
+            var c = rand.nextInt(2)
             if(c == 0){
-                var a: Double = r.nextDouble()*Pi // 0 ~ 180
-                var x: Double = sqrt(r.nextDouble()) * cos(a) * 3 + (if(r.nextInt(2) == 0) (-7) else (7)*cos(a))
-                var y: Double = sqrt(r.nextDouble()) * sin(a) * 6 + (4 * sin(a))
-                test_data(i)(0) = x;test_data(i)(1) = y
-                test_target(i)(0) = 1.0;test_target(i)(1) = 0.0
+                var a: Double = rand.nextDouble()*Pi // 0 ~ 180
+                var x: Double = sqrt(rand.nextDouble()) * cos(a) * (w/2) + (if(rand.nextInt(2) == 0) (-r-(w/2)) else ((r+w/2))*cos(a))
+                var y: Double = sqrt(rand.nextDouble()) * sin(a) * w + (r * sin(a)) - d
+                test_data(i)(0) = x
+                test_data(i)(1) = y
+                test_target(i)(0) = 1.0
+                test_target(i)(1) = 0.0
             }else{
-                var a: Double = r.nextDouble()*scala.math.Pi + scala.math.Pi // 180 ~ 360
-                var x: Double = 7 + (sqrt(r.nextDouble()) * cos(a)*3 + (if(r.nextInt(2) == 0) (-7) else (7))*cos(a))
-                var y: Double = -(sqrt(r.nextDouble()) * sin(a) * (-6) + (-4 * sin(a)))
-                test_data(i)(0) = x;test_data(i)(1) = y
-                test_target(i)(0) = 0.0;test_target(i)(1) = 1.0
+                var a: Double = rand.nextDouble()*scala.math.Pi + scala.math.Pi // 180 ~ 360
+                var x: Double = (r+w/2) + (sqrt(rand.nextDouble()) * cos(a) * (w/2)) + (if(rand.nextInt(2) == 0) (-r-(w/2)) else (r+(w/2))) * cos(a)
+                var y: Double =         - (sqrt(rand.nextDouble()) * sin(a) * (-w)  + (-r * sin(a))) + d
+                test_data(i)(0) = x
+                test_data(i)(1) = y
+                test_target(i)(0) = 0.0
+                test_target(i)(1) = 1.0
             }
         }
 
@@ -83,15 +95,14 @@ class SLP(inputNodes: Int, outputNodes: Int){
     var input: Array[Double] = new Array[Double](ins)
     var out: Array[Double] = new Array[Double](outs)
 
-    var InOut = Array.ofDim[Double](ins,outs)
+    var inOut = Array.ofDim[Double](ins,outs)
 
-    var Learning_Rate = 0.05
-
+    var lr = 0.05
 
     def init() : Unit = {
         val r = new scala.util.Random
 
-        InOut = InOut.map(_.map(_ => r.nextDouble()))
+        inOut = inOut.map(_.map(_ => r.nextDouble()))
         println("[SLP] Initialized")
     }
 
@@ -103,19 +114,19 @@ class SLP(inputNodes: Int, outputNodes: Int){
     def feedForward(): Unit ={
         out = out.map(_ => 0.0)
         for(i: Int <- 0 until ins; j: Int <- 0 until outs){
-            out(j) += input(i) * InOut(i)(j)
-            out(j) = stepFunction(out(j))
+            out(j) += input(i) * inOut(i)(j)
+            out(j) = step(out(j))
         }
     }
 
     def train(target: Array[Double]): Unit ={
         for(o: Int <- 0 until outs; i: Int <- 0 until ins){
             var error: Double = target(o) - out(o)
-            InOut(i)(o) = InOut(i)(o) + (error * Learning_Rate * input(i))
+            inOut(i)(o) = inOut(i)(o) + (error * lr * input(i))
         }
     }
 
-    def stepFunction(x: Double): Double = {
+    def step(x: Double): Double = {
         return if(x > 0.5) 1.0 else 0.0
     }
 
