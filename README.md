@@ -14,9 +14,16 @@ This graph represents the lines that must contain all the points of each moon. N
 ### Implementation
 
 In order to get the points inside of each moon on Scala, I used `matplotlib` on Python to get the expressions, which are:
->![](http://latex.codecogs.com/gif.latex?%5C%5Ca%20%3D%20%5Cpi%5Ccdot%20random%20%5C%5C%20x_%7B1%7D%20%3D%20%5Csqrt%7Brandom%7D%5Ccdot%20%5Ccos%7Ba%7D%5Ccdot%203%20%5Cpm%207%20%5Ccdot%20%5Ccos%7Ba%7D%20%5C%5C%20y_%7B1%7D%20%3D%20%5Csqrt%7Brandom%7D%5Ccdot%20%5Csin%7Ba%7D%5Ccdot%206%20&plus;%203%5Ccdot%20%5Csin%7Ba%7D%20%5C%5C%5C%5C%20a%20%3D%20%5Cpi%5Ccdot%20random%20&plus;%20%5Cpi%20%5C%5C%20x_%7B2%7D%20%3D%207%20&plus;%20%5Csqrt%7Brandom%7D%20%5Ccdot%20%5Ccos%7Ba%7D%5Ccdot%203%20%5Cpm%207%20%5Ccos%7Ba%7D%20%5C%5C%20y_%7B2%7D%20%3D%20-%28%5Csqrt%7Brandom%7D%20%5Ccdot%20%5Csin%7Ba%7D%5Ccdot%20%28-6%29%20-%204%5Ccdot%20%5Csin%7Ba%7D%29)
+>![](https://latex.codecogs.com/png.latex?%5C%5Ca%20%3D%20%5Cpi%5Ccdot%20random%5C%5C%20%5C%5Cx_%7B1%7D%20%3D%20%5Csqrt%7Brandom%7D%5Ccdot%5Ccos%20a%20%5Ccdot%20%28%5Cfrac%7Bw%7D%7B2%7D%29%20%5Cpm%20%28r%20&plus;%20%5Cfrac%7Bw%7D%7B2%7D%29%5Ccdot%20%5Ccos%20a%20%5C%5Cy_%7B1%7D%20%3D%20%5Csqrt%7Brandom%7D%5Ccdot%5Csin%20a%20%5Ccdot%20w%20&plus;%20r%5Ccdot%5Csin%20a%20-%20d%5C%5C%5C%5C%20%5C%5Ca%20%3D%20%5Cpi%5Ccdot%20random%5C%5C%20%5C%5Cx_%7B1%7D%20%3D%20r%20&plus;%20%5Cfrac%7Bw%7D%7B2%7D%20&plus;%20%5Csqrt%7Brandom%7D%5Ccdot%5Ccos%20a%20%5Ccdot%20%28%5Cfrac%7Bw%7D%7B2%7D%29%20%5Cpm%20%28r%20&plus;%20%5Cfrac%7Bw%7D%7B2%7D%29%5Ccdot%20%5Ccos%20a%20%5C%5Cy_%7B1%7D%20%3D%20-%28%5Csqrt%7Brandom%7D%5Ccdot%5Csin%20a%20%5Ccdot%20%28-w%29%20-%20r%5Ccdot%5Csin%20a%29%20&plus;%20d)
 
-Where `random` means a complete random number (between 0 and 1), not a same, and `a` stands for a random angle. Note that the first equation will give you random points on inside the blue-moon and the second equation will give you random points inside the red-moon. You can see it by running `python aux/plotter.py` .
+Where:
+* `random` stands for a random number between 0 and 1, not the same.
+* `a` stands for a random angle.
+* `w` stands for width of the arch.
+* `r` stands for the radius of the inner circle.
+* `d` stands for vertical distance between both circles.
+
+Note that `x1` and `y1` equations will give you random points on inside the blue-moon and the `x2` and `y2` equations will give you random points inside the red-moon. You can see it by running `python aux/plotter.py` .
 
 Final result:
 
